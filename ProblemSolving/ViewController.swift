@@ -11,6 +11,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+            //checking Initial commit
         // Do any additional setup after loading the view.
         // **********Reverse string ****************
         //        var input: [Character] = ["H","a","n","n","a","h"]
