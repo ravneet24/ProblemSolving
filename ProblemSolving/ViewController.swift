@@ -59,8 +59,39 @@ class ViewController: UIViewController {
         // ********** Merge intervals ****************
 //        let output = merge([[1,4],[4,5]])
         
-        // ********** Combination sum ****************
-        let output = combinationSum([2,3,5], 8)
+//        // ********** Combination sum ****************
+//        let output = combinationSum([2,3,5], 8)
+        // ------------- 3 Sum --------------
+//        let output = threeSum([-1,0,1,2,-1,-4])
+//        let output = threeSum([1,2,3,4])
+//        print("output ----> \(output)")
+        // --------search insertion point -----
+//        let output = searchInsert([1,3,5,6], 4)
+//        print("output ---> \(output)")
+        
+        // --------- climb stairs -----------
+//        let output = anotherClimbStairs(3)
+//        print("output ----> \(output)")
+        
+        // --------- word break -----------
+//        let output = wordBreak("leetcode", ["leet", "code"])
+//        let output = wordBreak("leetcode", ["leet", "leetcode"])
+//        print("output ----> \(output)")
+        // --------- jump game -----------
+//        let output = canJump([2,3,1,1,4])
+//        print("output ----> \(output)")
+        
+        // --------- minimum jumps -----------
+//        let output = minimumJumps([2,3,1,1,4])
+//        print("output ----> \(output)")
+//
+        // // --------- bubble sort -----------
+//        var input = [2,5,7,3,4]
+//        bubbleSort(&input)
+        
+        // --------- merge sort --------
+        var input = [2,5,7,3,4]
+        let output = mergeSort(inputArray: input)
     }
     
     func reverseString(_ s: inout [Character]) {
@@ -362,7 +393,218 @@ class ViewController: UIViewController {
                comb.removeLast()
            }
        }
+    //not optimized
+//    func threeSum(_ nums: [Int]) -> [[Int]] {
+//
+//          if nums.count == 3 {
+//              if nums[0] + nums[1] + nums[2] == 0 {
+//                  return [nums]
+//              } else {
+//                  return []
+//              }
+//          }
+//          var output = Set<[Int]>()
+//          for i in 0...(nums.count - 3) {
+//              for j in (i+1)..<nums.count {
+//                   var k = nums.count - 1
+//                  while j < k {
+//
+//                  if nums[i] + nums[j] + nums[k] == 0 {
+//                      output.insert([nums[i], nums[j], nums[k]].sorted())
+//                  }
+//                  k -= 1
+//                  }
+//              }
+//          }
+//          return Array(output)
+//      }
+    
+    func threeSum(_ nums: [Int]) -> [[Int]] {
+        let sortedNums = nums.sorted()
+          var result = Set<[Int]>()
 
+          for i in 0 ..< sortedNums.count {
+              var j = i + 1
+              var k = sortedNums.count - 1
+              while j < k {
+                  print("checking ---> [\(sortedNums[i]),\(sortedNums[j]),\(sortedNums[k])]")
+                  let sum = sortedNums[i] + sortedNums[j] + sortedNums[k]
+                  if sum == 0 {
+                      result.insert([sortedNums[i], sortedNums[j], sortedNums[k]])
+                      j += 1
+                      k -= 1
+                  } else if sum < 0 {
+                      j += 1
+                  } else {
+                      k -= 1
+                  }
+              }
+          }
+
+          return Array(result)
+      }
+    
+    func searchInsert(_ nums: [Int], _ target: Int) -> Int {
+            var start = 0
+            var end = nums.count
+
+            while start < end {
+                let mid = (start + end) / 2
+
+                if nums[mid] < target {
+                    start = mid + 1
+                } else {
+                    end = mid
+                }
+            }
+            return start
+        }
+    
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+            var dp = [Bool](repeating: false, count: s.count+1)
+            dp[0] = true
+
+            let chars = Array(s)
+            let wordSet = Set(wordDict)
+
+            for i in 1...s.count {
+//             print("next iteration of outer loop for i ----> \(i)")
+                for j in 0..<i {
+            //        print("next iteration of inner loop for i ---> \(i) and j ----> \(j)")
+            //        print("dp[j] ----> \(dp[j])")
+                    print("check string in wordsert ----> \(String(chars[j..<i]))")
+                    guard dp[j], wordSet.contains(String(chars[j..<i])) else { continue }
+                    print("word found")
+            //        print("set dp[i] = true ---> where i ---> \(i) and dp[i] ---> \(dp[i])")
+                    dp[i] = true
+                    break
+                }
+            }
+
+            return dp[s.count]
+        }
+    
+    func canJump(_ nums: [Int]) -> Bool {
+          var reach = 0
+          var i = 0
+
+          while i <= reach {
+              print("nums[i] ----> \(nums[i])")
+              print("before setting reach ----> \(reach)")
+              reach = max(reach, i + nums[i])
+              print("After  setting reach ----> \(reach)")
+              i += 1
+              if reach >= nums.count - 1 { return true }
+          }
+
+          return false
+      }
+    func minimumJumps(_ nums: [Int]) -> Int {
+        if nums.count == 1 {
+            return 0
+        }
+        var maxReach: Int = nums[0]
+        var steps: Int = nums[0]
+        var jumps: Int = 0
+        for i in 0..<nums.count {
+            maxReach = max(maxReach, nums[i]+i)
+            steps -= 1
+            if steps == 0 {
+                jumps += 1
+                steps = maxReach - i
+            }
+        }
+        return jumps+1
+    }
+    
+//    int maxReach = nums[0];
+//    int steps = nums[0];
+//    int jumps = 0;
+//    for(int i=1;i<nums.size()-1;i++)
+//    {
+//        maxReach = max(maxReach, nums[i]+i);
+//        steps--;
+//        if(steps==0)
+//        {
+//            jumps++;
+//            steps = maxReach - i;
+//        }
+//    }
+//    return jumps+1
+    
+    public func bubbleSort<Element>(_ array: inout [Element])
+        where Element: Comparable {
+    // 1
+      guard array.count >= 2 else {
+    return
+    }
+    // 2
+      for end in (1..<array.count).reversed() {
+        var swapped = false
+        // 3
+        for current in 0..<end {
+          if array[current] > array[current + 1] {
+            array.swapAt(current, current + 1)
+            swapped = true
+          }
+    }
+    // 4
+    if !swapped {
+        print("sorted array ---> \(array)")
+    return
+    } }
+    }
+    
+    func mergeSort(inputArray: [Int]) -> [Int] {
+        print(" inputArray ----> \(inputArray)")
+        guard inputArray.count > 1 else {
+            print("return in guard statement")
+           return inputArray
+        }
+        //first we split array to two halves until we can not split more
+        let middle = inputArray.count / 2
+        let left = mergeSort(inputArray: Array(inputArray[..<middle]))
+        let right = mergeSort(inputArray: Array(inputArray[middle...]))
+        
+        return merge(left: left, right: right)
+    }
+
+    func merge(left: [Int], right: [Int]) -> [Int] {
+        print("left ---> \(left)")
+        print("right ---> \(right)")
+    
+        // 1
+        var leftIndex = 0
+        var rightIndex = 0
+        // 2
+        var result: [Int] = []
+        // 3
+        while leftIndex < left.count && rightIndex < right.count {
+            let leftElement = left[leftIndex]
+            let rightElement = right[rightIndex]
+            // 4
+            if leftElement < rightElement {
+                result.append(leftElement)
+                leftIndex += 1
+            } else if leftElement > rightElement {
+                result.append(rightElement)
+                rightIndex += 1
+            } else {
+                result.append(leftElement)
+                leftIndex += 1
+                result.append(rightElement)
+                rightIndex += 1
+            } }
+        // 5
+        if leftIndex < left.count {
+            result.append(contentsOf: left[leftIndex...])
+        }
+        if rightIndex < right.count {
+            result.append(contentsOf: right[rightIndex...])
+        }
+        print("result ---> \(result)")
+        return result
+    }
 }
 
 public class ListNode {
